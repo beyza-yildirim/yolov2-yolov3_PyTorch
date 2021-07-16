@@ -24,6 +24,7 @@ from utils.cocoapi_evaluator import COCOAPIEvaluator
 from utils.vocapi_evaluator import VOCAPIEvaluator
 from utils.modules import ModelEMA
 
+import wandb
 
 def parse_args():
     parser = argparse.ArgumentParser(description='YOLO Detection')
@@ -61,7 +62,7 @@ def parse_args():
                         help='Number of workers used in dataloading')
     parser.add_argument('--eval_epoch', type=int,
                             default=10, help='interval between evaluations')
-    parser.add_argument('--cuda', action='store_true', default=False,
+    parser.add_argument('--cuda', action='store_true', default=True,
                         help='use cuda.')
     parser.add_argument('--tfboard', action='store_true', default=False,
                         help='use tensorboard')
@@ -120,6 +121,28 @@ def train():
         print('Unknown model name...')
         exit(0)
 
+    if args.start_epoch == 0:
+        wandb.init(project='yolov2_d19', entity='beyzayildirim', config={"epochs": cfg['max_epoch'],
+                                                                        "learning_rate": args.lr,
+                                                                        "batch_size": args.batch_size,
+                                                                        "start_epoch": args.start_epoch,
+                                                                        "conf_thres": args.conf_thres,
+                                                                        "num_classes": args.num_classes,
+                                                                        "momentum": args.momentum,
+                                                                        "weight decay": args.weight_decay,
+                                                                        "gamma": args.gamma})
+    else:
+        wandb.init(id = '2wbjs32i', resume='must', project='yolov2_d19', entity='beyzayildirim', config={"epochs": cfg['max_epoch'],
+                                                                                                        "learning_rate": args.lr,
+                                                                                                        "batch_size": args.batch_size,
+                                                                                                        "start_epoch": args.start_epoch,
+                                                                                                        "conf_thres": args.conf_thres,
+                                                                                                        "num_classes": args.num_classes,
+                                                                                                        "momentum": args.momentum,
+                                                                                                        "weight decay": args.weight_decay,
+                                                                                                        "gamma": args.gamma})
+
+    
     # path to save model
     path_to_save = os.path.join(args.save_folder, args.dataset, args.version)
     os.makedirs(path_to_save, exist_ok=True)
@@ -244,7 +267,9 @@ def train():
     t0 = time.time()
     # start training loop
     for epoch in range(args.start_epoch, max_epoch):
-
+        
+        wandb.log({"epoch": epoch})
+        
         # use step lr
         if epoch in cfg['lr_epoch']:
             tmp_lr = tmp_lr * 0.1
@@ -276,7 +301,6 @@ def train():
             
             # make labels
             targets = [label.tolist() for label in targets]
-            # 可视化数据，以便查看预处理部分是否有问题，将下面两行取消注释即可
             # vis_data(images, targets, train_size)
             # continue
             if model_name == 'yolov2_d19' or model_name == 'yolov2_r50' or model_name == 'yolov2_slim':
@@ -303,7 +327,9 @@ def train():
             total_loss.backward()        
             optimizer.step()
             optimizer.zero_grad()
-
+            
+            wandb.log({"step loss": total_loss})
+            
             # ema
             if args.ema:
                 ema.update(model)
@@ -343,8 +369,10 @@ def train():
             model_eval.eval()
 
             # evaluate
-            evaluator.evaluate(model_eval)
-
+            map = evaluator.evaluate(model_eval)
+            
+            wandb.log({"mAP": map})
+            
             # convert to training mode.
             model_eval.trainable = True
             model_eval.set_grid(train_size)
