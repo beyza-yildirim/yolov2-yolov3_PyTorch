@@ -91,7 +91,7 @@ class VOCAPIEvaluator():
         self.evaluate_detections(self.all_boxes)
 
         print('Mean AP: ', self.map)
-  
+        return self.map
 
     def parse_rec(self, filename):
         """ Parse a PASCAL VOC xml file """
