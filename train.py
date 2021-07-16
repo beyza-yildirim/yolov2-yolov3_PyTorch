@@ -94,29 +94,6 @@ def train():
         from models.yolov2_d19 import YOLOv2D19 as yolo_net
         cfg = config.yolov2_d19_cfg
 
-    elif model_name == 'yolov2_r50':
-        from models.yolov2_r50 import YOLOv2R50 as yolo_net
-        cfg = config.yolov2_r50_cfg
-
-    elif model_name == 'yolov2_slim':
-        from models.yolov2_slim import YOLOv2Slim as yolo_net
-        cfg = config.yolov2_slim_cfg
-
-    elif model_name == 'yolov3':
-        from models.yolov3 import YOLOv3 as yolo_net
-        cfg = config.yolov3_d53_cfg
-
-    elif model_name == 'yolov3_spp':
-        from models.yolov3_spp import YOLOv3Spp as yolo_net
-        cfg = config.yolov3_d53_cfg
-
-    elif model_name == 'yolov4':
-        from models.yolov4 import YOLOv4 as yolo_net
-        cfg = config.yolov4_cfg
-
-    elif model_name == 'yolov3_tiny':
-        from models.yolov3_tiny import YOLOv3tiny as yolo_net
-        cfg = config.yolov3tiny_cfg
     else:
         print('Unknown model name...')
         exit(0)
@@ -132,7 +109,7 @@ def train():
                                                                         "weight decay": args.weight_decay,
                                                                         "gamma": args.gamma})
     else:
-        wandb.init(id = '2wbjs32i', resume='must', project='yolov2_d19', entity='beyzayildirim', config={"epochs": cfg['max_epoch'],
+        wandb.init(id = 'tbd', resume='must', project='yolov2_d19', entity='beyzayildirim', config={"epochs": cfg['max_epoch'],
                                                                                                         "learning_rate": args.lr,
                                                                                                         "batch_size": args.batch_size,
                                                                                                         "start_epoch": args.start_epoch,
@@ -399,9 +376,9 @@ def vis_data(images, targets, input_size):
 
     img = images[0].permute(1, 2, 0).cpu().numpy()[:, :, ::-1]
     img = ((img * std + mean)*255).astype(np.uint8)
-    cv2.imwrite('1.jpg', img)
+    #cv2.imwrite('1.jpg', img)
 
-    img_ = cv2.imread('1.jpg')
+    #img_ = cv2.imread('1.jpg')
     for box in targets[0]:
         xmin, ymin, xmax, ymax = box[:-1]
         # print(xmin, ymin, xmax, ymax)
@@ -411,8 +388,8 @@ def vis_data(images, targets, input_size):
         ymax *= input_size
         cv2.rectangle(img_, (int(xmin), int(ymin)), (int(xmax), int(ymax)), (0, 0, 255), 2)
 
-    cv2.imshow('img', img_)
-    cv2.waitKey(0)
+    #cv2.imshow('img', img_)
+    #cv2.waitKey(0)
 
 
 if __name__ == '__main__':
