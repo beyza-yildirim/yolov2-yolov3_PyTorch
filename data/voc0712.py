@@ -27,9 +27,9 @@ VOC_CLASSES = (  # always index 0
 
 # note: if you used our download scripts, this should be right
 path_to_dir = osp.dirname(osp.abspath(__file__))
-VOC_ROOT = path_to_dir + "/VOCdevkit/"
+#VOC_ROOT = path_to_dir + "/VOCdevkit/"
 
-VOC_ROOT = "/home/jxk/object-detection/dataset/VOCdevkit/"
+VOC_ROOT = "/content/drive/MyDrive/yolov2-yolov3_PyTorch/data/VOCdevkit"
 
 
 class VOCAnnotationTransform(object):
