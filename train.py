@@ -103,8 +103,8 @@ def train():
                                                                         "learning_rate": args.lr,
                                                                         "batch_size": args.batch_size,
                                                                         "start_epoch": args.start_epoch,
-                                                                        "conf_thres": args.conf_thres,
-                                                                        "num_classes": args.num_classes,
+                                                                        #"conf_thres": args.conf_thres,
+                                                                        "num_classes": 20,#args.num_classes,
                                                                         "momentum": args.momentum,
                                                                         "weight decay": args.weight_decay,
                                                                         "gamma": args.gamma})
@@ -113,8 +113,8 @@ def train():
                                                                                                         "learning_rate": args.lr,
                                                                                                         "batch_size": args.batch_size,
                                                                                                         "start_epoch": args.start_epoch,
-                                                                                                        "conf_thres": args.conf_thres,
-                                                                                                        "num_classes": args.num_classes,
+                                                                                                        #"conf_thres": args.conf_thres,
+                                                                                                        "num_classes": 20,#args.num_classes,
                                                                                                         "momentum": args.momentum,
                                                                                                         "weight decay": args.weight_decay,
                                                                                                         "gamma": args.gamma})
